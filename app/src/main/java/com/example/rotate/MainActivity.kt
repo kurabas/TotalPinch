@@ -1,8 +1,7 @@
 package com.example.rotate
 
-import RotationGestureDetector
-import RotationGestureDetector.OnRotationGestureListener
-import android.app.Activity
+import RotationZoomGestureDetector
+import RotationZoomGestureDetector.OnRotationZoomGestureListener
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -16,11 +15,11 @@ import androidx.appcompat.app.AppCompatActivity
 //    }
 //}
 
-class MainActivity : AppCompatActivity(), OnRotationGestureListener {
-    private var mRotationDetector: RotationGestureDetector? = null
+class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
+    private var mRotationDetector: RotationZoomGestureDetector? = null
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mRotationDetector = RotationGestureDetector(this)
+        mRotationDetector = RotationZoomGestureDetector(this)
 //        setContentView(R.layout.activity_main)
     }
 
@@ -29,8 +28,11 @@ class MainActivity : AppCompatActivity(), OnRotationGestureListener {
         return super.onTouchEvent(event)
     }
 
-    override fun OnRotation(rotationDetector: RotationGestureDetector?) {
-        val angle = rotationDetector!!.angle
+    override fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?) {
+        val angle = rotationZoomDetector!!.angle
+        val zoom = rotationZoomDetector!!.zoom
         Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
+        Log.d("RotationGestureDetector", "Zoom: " + java.lang.Float.toString(zoom))
     }
 }
+

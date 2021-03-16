@@ -1,8 +1,10 @@
 
 import android.view.MotionEvent
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
-class RotationGestureDetector(private val mListener: OnRotationGestureListener?) {
+class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureListener?) {
     private var fX = 0f
     private var fY = 0f
     private var sX = 0f
@@ -10,6 +12,7 @@ class RotationGestureDetector(private val mListener: OnRotationGestureListener?)
     private var ptrID1: Int
     private var ptrID2: Int
     var angle = 0f
+    var zoom = 1f
         private set
 
     fun onTouchEvent(event: MotionEvent): Boolean {
@@ -32,7 +35,9 @@ class RotationGestureDetector(private val mListener: OnRotationGestureListener?)
                 nfX = event.getX(event.findPointerIndex(ptrID2))
                 nfY = event.getY(event.findPointerIndex(ptrID2))
                 angle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
-                mListener?.OnRotation(this)
+
+                zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
+                mListener?.OnRotationZoom(this)
             }
             MotionEvent.ACTION_UP -> ptrID1 = INVALID_POINTER_ID
             MotionEvent.ACTION_POINTER_UP -> ptrID2 = INVALID_POINTER_ID
@@ -42,6 +47,26 @@ class RotationGestureDetector(private val mListener: OnRotationGestureListener?)
             }
         }
         return true
+    }
+
+    private fun zoomBetweenLines(
+        fX: Float,
+        fY: Float,
+        sX: Float,
+        sY: Float,
+        nfX: Float,
+        nfY: Float,
+        nsX: Float,
+        nsY: Float
+    ): Float {
+        //stelling van pythagoras voor de 1e en 2e lijn
+        val firstLength = sqrt((fX - sX).pow(2) + (fY - sY).pow(2))
+        val secondLength = sqrt((nfX - nsX).pow(2) + (nfY - nsY).pow(2))
+
+        //zoom wordt berekend door de 2e en 1e lijn te delen
+        val zoom = secondLength/firstLength
+        return zoom
+
     }
 
     private fun angleBetweenLines(
@@ -64,8 +89,9 @@ class RotationGestureDetector(private val mListener: OnRotationGestureListener?)
         return angle
     }
 
-    interface OnRotationGestureListener {
-        fun OnRotation(rotationDetector: RotationGestureDetector?)
+    interface OnRotationZoomGestureListener {
+
+        fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?)
     }
 
     companion object {
