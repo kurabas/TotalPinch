@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
         return super.onTouchEvent(event)
     }
 
+
     override fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?) {
         val angle = rotationZoomDetector!!.angle
         val zoom = rotationZoomDetector!!.zoom

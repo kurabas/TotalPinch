@@ -5,6 +5,8 @@ import kotlin.math.sqrt
 
 
 class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureListener?) {
+
+
     private var fX = 0f
     private var fY = 0f
     private var sX = 0f
