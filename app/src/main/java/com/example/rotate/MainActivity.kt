@@ -11,12 +11,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.scaleMatrix
 
 
+//TODO: verwijder onderstaand comments (tenzij er heel goede reden is het te bewaren)
 //class MainActivity : AppCompatActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
 //    }
 //}
+
+// TODO: na verplaatsing wordt image niet gereset, maar begint rotatiematrix wel weer op 0, reset de image OF zorg dat de rotatiematrix blijft (en voeg dan evt reset knop toe)
 
 class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
@@ -40,11 +43,14 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
     override fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?) {
         val angle = rotationZoomDetector!!.angle
+        // TODO: hieronder is de !! operator niet meer nodig zegt andriod studio... bedenk why?
         val zoom = rotationZoomDetector!!.zoom
         val (tx, ty) = rotationZoomDetector!!.translation
 
 //        Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
         Log.d("RotationGestureDetector", "Zoom: " + java.lang.Float.toString(zoom))
+
+// TODO: remove comment below, voeg evt comment to achter set (waarom geen assignment)
 
 //        val newMatrix = mazeMatrix
 
@@ -57,6 +63,7 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
         mazeImage?.imageMatrix = newMatrix
 
+// TODO: remove comments below, behalve als er heel goede reden is om ze te houden.
 
 //        mazeImage!!.setImageMatrix(newMatrix)
 //        postRotate(float degrees)
