@@ -15,8 +15,7 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
     private var ptrID2: Int
     var angle = 0f
     var zoom = 1f
-    var cy = 0f
-    var cx = 0f
+    var translation = Pair(0f, 0f)
 
         private set
     fun onTouchEvent(event: MotionEvent): Boolean {
@@ -34,16 +33,15 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
                 val nfY: Float
                 val nsX: Float
                 val nsY: Float
-//                cx = (nfX + nsX) / 2
                 nsX = event.getX(event.findPointerIndex(ptrID1))
                 nsY = event.getY(event.findPointerIndex(ptrID1))
                 nfX = event.getX(event.findPointerIndex(ptrID2))
                 nfY = event.getY(event.findPointerIndex(ptrID2))
-                cx = (nfX + nsX) / 2
-                cy = (nfY + nsY) / 2
-                angle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
 
+                angle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
                 zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
+                translation = translationAfterRotateAndZoom(angle, zoom, fX, fY, nfX, nfY)
+
                 mListener?.OnRotationZoom(this)
             }
             MotionEvent.ACTION_UP -> ptrID1 = INVALID_POINTER_ID
@@ -54,6 +52,28 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
             }
         }
         return true
+    }
+
+
+    private fun translationAfterRotateAndZoom(
+            angle: Float,
+            zoom: Float,
+            fX: Float,
+            fY: Float,
+            nfX: Float,
+            nfY: Float): Pair<Float, Float> {
+
+        // calculate point after rotate and zoom
+        val s = kotlin.math.sin(angle / 180f * kotlin.math.PI)
+        val c = kotlin.math.cos(angle / 180f * kotlin.math.PI)
+        val xnew = (fX * c - fY * s) * zoom
+        val ynew = (fX * s + fY * c) * zoom
+
+        // calculate translation needed to get to new point
+        val tx = nfX - xnew
+        val ty = nfY - ynew
+
+        return Pair(tx.toFloat(), ty.toFloat())
     }
 
     private fun zoomBetweenLines(
