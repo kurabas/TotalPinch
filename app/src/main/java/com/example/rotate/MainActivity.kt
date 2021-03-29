@@ -41,13 +41,19 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
     override fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?) {
         val angle = rotationZoomDetector!!.angle
         val zoom = rotationZoomDetector!!.zoom
-        Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
+        val centerX = rotationZoomDetector!!.cx
+        val centerY = rotationZoomDetector!!.cy
+
+//        Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
         Log.d("RotationGestureDetector", "Zoom: " + java.lang.Float.toString(zoom))
 
-        val newMatrix = mazeMatrix
+//        val newMatrix = mazeMatrix
 
-        newMatrix.postRotate(angle, 200f, 400f)
-        newMatrix.postScale(zoom, zoom)
+        val newMatrix = Matrix()
+
+        newMatrix.set(mazeMatrix)
+        newMatrix.postRotate(angle, centerX, centerY)
+        newMatrix.postScale(zoom, zoom, centerX, centerY)
 
         mazeImage?.imageMatrix = newMatrix
 

@@ -15,8 +15,10 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
     private var ptrID2: Int
     var angle = 0f
     var zoom = 1f
-        private set
+    var cy = 0f
+    var cx = 0f
 
+        private set
     fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> ptrID1 = event.getPointerId(event.actionIndex)
@@ -32,10 +34,13 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
                 val nfY: Float
                 val nsX: Float
                 val nsY: Float
+//                cx = (nfX + nsX) / 2
                 nsX = event.getX(event.findPointerIndex(ptrID1))
                 nsY = event.getY(event.findPointerIndex(ptrID1))
                 nfX = event.getX(event.findPointerIndex(ptrID2))
                 nfY = event.getY(event.findPointerIndex(ptrID2))
+                cx = (nfX + nsX) / 2
+                cy = (nfY + nsY) / 2
                 angle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
 
                 zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
