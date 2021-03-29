@@ -90,7 +90,7 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
             Math.atan2((fY - sY).toDouble(), (fX - sX).toDouble()).toFloat()
         val angle2 =
             Math.atan2((nfY - nsY).toDouble(), (nfX - nsX).toDouble()).toFloat()
-        var angle = Math.toDegrees((angle1 - angle2).toDouble()).toFloat() % 360
+        var angle = Math.toDegrees((angle2 - angle1).toDouble()).toFloat() % 360
         if (angle < -180f) angle += 360.0f
         if (angle > 180f) angle -= 360.0f
         return angle
