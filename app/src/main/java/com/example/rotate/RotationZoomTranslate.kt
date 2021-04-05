@@ -1,11 +1,13 @@
 
 import android.view.MotionEvent
+import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 // TODO: voeg commentaar toe,beschrijf wat de class doet
 // TODO: evt rename class, hij detecteert nu ook translations (maar RotationZoomTranslationGestureDetector is wat lang en ook niet heel helder...)
-class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureListener?) {
+//RotationZoomTranslate, it detects the rotation, zoom and translation for an image
+class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener?) {
 
 
     private var fX = 0f
@@ -19,6 +21,7 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
     var translation = Pair(0f, 0f)
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie doet
+    //It detects the first 2 and second 2 fingers on the display and it the detects the movement after
     fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> ptrID1 = event.getPointerId(event.actionIndex)
@@ -31,14 +34,10 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
             }
             MotionEvent.ACTION_MOVE -> if (ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
                 // TODO: android studio heeft golfjes  met tip bij onderstaande, dat moet gefixed
-                val nfX: Float
-                val nfY: Float
-                val nsX: Float
-                val nsY: Float
-                nsX = event.getX(event.findPointerIndex(ptrID1))
-                nsY = event.getY(event.findPointerIndex(ptrID1))
-                nfX = event.getX(event.findPointerIndex(ptrID2))
-                nfY = event.getY(event.findPointerIndex(ptrID2))
+                val nsX: Float = event.getX(event.findPointerIndex(ptrID1))
+                val nsY: Float = event.getY(event.findPointerIndex(ptrID1))
+                val nfX: Float = event.getX(event.findPointerIndex(ptrID2))
+                val nfY: Float = event.getY(event.findPointerIndex(ptrID2))
 
                 angle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
                 zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
@@ -57,6 +56,7 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
     }
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie berekend (wellicht eerst andere twee)
+    //It calculates the points after rotate and zoom
     private fun translationAfterRotateAndZoom(
             angle: Float,
             zoom: Float,
@@ -65,22 +65,22 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
             nfX: Float,
             nfY: Float): Pair<Float, Float> {
 
-        // calculate point after rotate and zoom
         // TODO: met import kunnen onderstaande regels korter, zonder de kotlin math
         val s = kotlin.math.sin(angle / 180f * kotlin.math.PI)
         val c = kotlin.math.cos(angle / 180f * kotlin.math.PI)
         // TODO: fix onderstaande varname naar camelCase
-        val xnew = (fX * c - fY * s) * zoom
-        val ynew = (fX * s + fY * c) * zoom
+        val xNew = (fX * c - fY * s) * zoom
+        val yNew = (fX * s + fY * c) * zoom
 
         // calculate translation needed to get to new point
-        val tx = nfX - xnew
-        val ty = nfY - ynew
+        val tx = nfX - xNew
+        val ty = nfY - yNew
 
         return Pair(tx.toFloat(), ty.toFloat())
     }
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie berekend
+    //It detects the first and the second length between the fingers and calculates by deviding it
     private fun zoomBetweenLines(
         fX: Float,
         fY: Float,
@@ -102,6 +102,7 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
     }
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie berekend
+    //It calculates the angle between the first and second finger
     private fun angleBetweenLines(
         fX: Float,
         fY: Float,
@@ -114,11 +115,13 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
     ): Float {
         // TODO: android studio heeft wat suggesties over de atan2 functie hieronder... volg op.
         val angle1 =
-            Math.atan2((fY - sY).toDouble(), (fX - sX).toDouble()).toFloat()
+            atan2((fY - sY).toDouble(), (fX - sX).toDouble()).toFloat()
         val angle2 =
-            Math.atan2((nfY - nsY).toDouble(), (nfX - nsX).toDouble()).toFloat()
+            atan2((nfY - nsY).toDouble(), (nfX - nsX).toDouble()).toFloat()
         var angle = Math.toDegrees((angle2 - angle1).toDouble()).toFloat() % 360
         // TODO: voeg commentaar toe, beschrijf wat onderstaande regels doen.
+        // If the angle is below -180 it will add up by 360
+        // If the angle is above 180 it will minus by 360
         if (angle < -180f) angle += 360.0f
         if (angle > 180f) angle -= 360.0f
         return angle
@@ -126,7 +129,7 @@ class RotationZoomGestureDetector(private val mListener: OnRotationZoomGestureLi
 
     // TODO: voeg commentaar toe, beschrijf wat deze interface doet
     interface OnRotationZoomGestureListener {
-        fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?)
+        fun OnRotationZoom(rotationZoomDetector: RotationZoomTranslate?)
     }
 
     companion object {

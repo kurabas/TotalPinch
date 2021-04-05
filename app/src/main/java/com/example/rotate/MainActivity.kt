@@ -1,35 +1,27 @@
 package com.example.rotate
 
-import RotationZoomGestureDetector
-import RotationZoomGestureDetector.OnRotationZoomGestureListener
+import RotationZoomTranslate
+import RotationZoomTranslate.OnRotationZoomGestureListener
 import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.scaleMatrix
 
 
 //TODO: verwijder onderstaand comments (tenzij er heel goede reden is het te bewaren)
-//class MainActivity : AppCompatActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
-//    }
-//}
-
 // TODO: na verplaatsing wordt image niet gereset, maar begint rotatiematrix wel weer op 0, reset de image OF zorg dat de rotatiematrix blijft (en voeg dan evt reset knop toe)
 
 class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
     private var mazeImage: ImageView? = null
     private var mazeMatrix: Matrix = Matrix()
-    private var mRotationDetector: RotationZoomGestureDetector? = null
+    private var mRotationDetector: RotationZoomTranslate? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mRotationDetector = RotationZoomGestureDetector(this)
+        mRotationDetector = RotationZoomTranslate(this)
         setContentView(R.layout.activity_main)
         mazeImage = findViewById<ImageView>(R.id.imageView)
         mazeMatrix = mazeImage!!.getImageMatrix()
@@ -41,9 +33,10 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
     }
 
 
-    override fun OnRotationZoom(rotationZoomDetector: RotationZoomGestureDetector?) {
+    override fun OnRotationZoom(rotationZoomDetector: RotationZoomTranslate?) {
         val angle = rotationZoomDetector!!.angle
         // TODO: hieronder is de !! operator niet meer nodig zegt andriod studio... bedenk why?
+        //Het is een non null receiver, dus is het overbodig om !! te plaatsen
         val zoom = rotationZoomDetector!!.zoom
         val (tx, ty) = rotationZoomDetector!!.translation
 
@@ -52,7 +45,6 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
 // TODO: remove comment below, voeg evt comment to achter set (waarom geen assignment)
 
-//        val newMatrix = mazeMatrix
 
         val newMatrix = Matrix()
 
@@ -65,10 +57,6 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
 // TODO: remove comments below, behalve als er heel goede reden is om ze te houden.
 
-//        mazeImage!!.setImageMatrix(newMatrix)
-//        postRotate(float degrees)
-//        postScale (float sx,
-//            float sy)
     }
 }
 
