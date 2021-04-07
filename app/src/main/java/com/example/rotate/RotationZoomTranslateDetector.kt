@@ -11,10 +11,10 @@ import kotlin.math.PI
 // onRotationZoomTranslate when motion has been detected
 class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTranslateListener?) {
 
-    private var fX = 0f
-    private var fY = 0f
-    private var sX = 0f
-    private var sY = 0f
+    private var orgX1 = 0f
+    private var orgY1 = 0f
+    private var orgX2 = 0f
+    private var orgY2 = 0f
     private var ptrID1: Int
     private var ptrID2: Int
     private var angle = 0f
@@ -27,20 +27,20 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
             MotionEvent.ACTION_DOWN -> ptrID1 = event.getPointerId(event.actionIndex)
             MotionEvent.ACTION_POINTER_DOWN -> {
                 ptrID2 = event.getPointerId(event.actionIndex)
-                sX = event.getX(event.findPointerIndex(ptrID1))
-                sY = event.getY(event.findPointerIndex(ptrID1))
-                fX = event.getX(event.findPointerIndex(ptrID2))
-                fY = event.getY(event.findPointerIndex(ptrID2))
+                orgX1 = event.getX(event.findPointerIndex(ptrID1))
+                orgY1 = event.getY(event.findPointerIndex(ptrID1))
+                orgX2 = event.getX(event.findPointerIndex(ptrID2))
+                orgY2 = event.getY(event.findPointerIndex(ptrID2))
             }
             MotionEvent.ACTION_MOVE -> if (ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
-                val nsX: Float = event.getX(event.findPointerIndex(ptrID1))
-                val nsY: Float = event.getY(event.findPointerIndex(ptrID1))
-                val nfX: Float = event.getX(event.findPointerIndex(ptrID2))
-                val nfY: Float = event.getY(event.findPointerIndex(ptrID2))
+                val curX1: Float = event.getX(event.findPointerIndex(ptrID1))
+                val curY1: Float = event.getY(event.findPointerIndex(ptrID1))
+                val curX2: Float = event.getX(event.findPointerIndex(ptrID2))
+                val curY2: Float = event.getY(event.findPointerIndex(ptrID2))
 
-                angle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
-                zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
-                translation = translationAfterRotateAndZoom(angle, zoom, fX, fY, nfX, nfY)
+                angle = angleBetweenLines(orgX1, orgY1, orgX2, orgY2, curX1, curY1, curX2, curY2)
+                zoom = zoomBetweenLines(orgX1, orgY1, orgX2, orgY2, curX1, curY1, curX2, curY2)
+                translation = translationAfterRotateAndZoom(angle, zoom, orgX2, orgY2, curX2, curY2)
 
                 mListener?.onRotationZoomTranslate(angle, zoom, translation)
             }
@@ -55,6 +55,7 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
     }
 
     // Calculates the translation after rotate and zoom
+    // TODO: rename vars below (org/cur) LET OP: alleen 1, geen 2.
     private fun translationAfterRotateAndZoom(
             angle: Float,
             zoom: Float,
@@ -80,15 +81,16 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
 
     // detects the first and the second length between the fingers and calculates the zoom factor
     // and divides it
+    // TODO: rename vars below (org/cur)
     private fun zoomBetweenLines(
-        fX: Float,
-        fY: Float,
         sX: Float,
         sY: Float,
-        nfX: Float,
-        nfY: Float,
+        fX: Float,
+        fY: Float,
         nsX: Float,
-        nsY: Float
+        nsY: Float,
+        nfX: Float,
+        nfY: Float
     ): Float {
         //stelling van pythagoras voor de 1e en 2e lijn
         val firstLength = sqrt((fX - sX).pow(2) + (fY - sY).pow(2))
@@ -100,15 +102,16 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
     }
 
     // calculates the angle between the original and current fingers
+    // TODO: rename vars below (org/cur)
     private fun angleBetweenLines(
-        fX: Float,
-        fY: Float,
         sX: Float,
         sY: Float,
-        nfX: Float,
-        nfY: Float,
+        fX: Float,
+        fY: Float,
         nsX: Float,
-        nsY: Float
+        nsY: Float,
+        nfX: Float,
+        nfY: Float
     ): Float {
         val angle1 =
             atan2((fY - sY).toDouble(), (fX - sX).toDouble()).toFloat()
