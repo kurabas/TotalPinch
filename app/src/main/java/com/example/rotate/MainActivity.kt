@@ -36,8 +36,16 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
     override fun OnRotationZoom(angle: Float, zoom: Float, translation: Pair<Float, Float>) {
         val (tx, ty) = translation
 
-//        Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
-        Log.d("RotationGestureDetector", "Zoom: " + java.lang.Float.toString(zoom))
+        Log.d("RotationGestureDetector", "Rotation: " +
+                java.lang.Float.toString(angle) +
+                " Zoom: " +
+                java.lang.Float.toString(zoom) +
+                " Translation: (" +
+                java.lang.Float.toString(tx) +
+                ", " +
+                java.lang.Float.toString(ty) +
+                ")"
+        )
 
         val newMatrix = Matrix()
 
