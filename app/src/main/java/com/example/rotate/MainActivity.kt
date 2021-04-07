@@ -33,15 +33,11 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
     }
 
 
-    override fun OnRotationZoom(rotationZoomDetector: RotationZoomTranslate?) {
-        val angle = rotationZoomDetector!!.angle
-        val zoom = rotationZoomDetector.zoom
-        val (tx, ty) = rotationZoomDetector.translation
+    override fun OnRotationZoom(angle: Float, zoom: Float, translation: Pair<Float, Float>) {
+        val (tx, ty) = translation
 
 //        Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
         Log.d("RotationGestureDetector", "Zoom: " + java.lang.Float.toString(zoom))
-
-
 
         val newMatrix = Matrix()
 
@@ -51,7 +47,6 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
         newMatrix.postTranslate(tx, ty)
 
         mazeImage?.imageMatrix = newMatrix
-
 
     }
 }

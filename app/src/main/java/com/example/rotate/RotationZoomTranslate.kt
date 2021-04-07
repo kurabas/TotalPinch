@@ -18,9 +18,9 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
     private var sY = 0f
     private var ptrID1: Int
     private var ptrID2: Int
-    var angle = 0f
-    var zoom = 1f
-    var translation = Pair(0f, 0f)
+    private var angle = 0f
+    private var zoom = 1f
+    private var translation = Pair(0f, 0f)
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie doet
     //It detects the first 2 and second 2 fingers on the display and calls OnRotationZoom when a movement is detected
@@ -44,7 +44,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
                 zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
                 translation = translationAfterRotateAndZoom(angle, zoom, fX, fY, nfX, nfY)
 
-                mListener?.OnRotationZoom(this)
+                mListener?.OnRotationZoom(angle, zoom, translation)
             }
             MotionEvent.ACTION_UP -> ptrID1 = INVALID_POINTER_ID
             MotionEvent.ACTION_POINTER_UP -> ptrID2 = INVALID_POINTER_ID
@@ -128,7 +128,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
 
     // TODO: voeg commentaar toe, beschrijf wat deze interface doet
     interface OnRotationZoomGestureListener {
-        fun OnRotationZoom(rotationZoomDetector: RotationZoomTranslate?)
+        fun OnRotationZoom(angle: Float, zoom: Float, translation: Pair<Float, Float>)
     }
 
     companion object {
