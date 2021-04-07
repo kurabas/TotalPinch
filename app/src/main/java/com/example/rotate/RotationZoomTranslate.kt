@@ -3,6 +3,9 @@ import android.view.MotionEvent
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.math.sin
+import kotlin.math.cos
+import kotlin.math.PI
 
 // TODO: voeg commentaar toe,beschrijf wat de class doet
 // TODO: evt rename class, hij detecteert nu ook translations (maar RotationZoomTranslationGestureDetector is wat lang en ook niet heel helder...)
@@ -21,7 +24,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
     var translation = Pair(0f, 0f)
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie doet
-    //It detects the first 2 and second 2 fingers on the display and it the detects the movement after
+    //It detects the first 2 and second 2 fingers on the display and calls OnRotationZoom when a movement is detected
     fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> ptrID1 = event.getPointerId(event.actionIndex)
@@ -33,7 +36,6 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
                 fY = event.getY(event.findPointerIndex(ptrID2))
             }
             MotionEvent.ACTION_MOVE -> if (ptrID1 != INVALID_POINTER_ID && ptrID2 != INVALID_POINTER_ID) {
-                // TODO: android studio heeft golfjes  met tip bij onderstaande, dat moet gefixed
                 val nsX: Float = event.getX(event.findPointerIndex(ptrID1))
                 val nsY: Float = event.getY(event.findPointerIndex(ptrID1))
                 val nfX: Float = event.getX(event.findPointerIndex(ptrID2))
@@ -55,8 +57,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
         return true
     }
 
-    // TODO: voeg commentaar toe, beschrijf wat deze functie berekend (wellicht eerst andere twee)
-    //It calculates the points after rotate and zoom
+    // Calculates the translation after rotate and zoom
     private fun translationAfterRotateAndZoom(
             angle: Float,
             zoom: Float,
@@ -65,10 +66,11 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
             nfX: Float,
             nfY: Float): Pair<Float, Float> {
 
-        // TODO: met import kunnen onderstaande regels korter, zonder de kotlin math
-        val s = kotlin.math.sin(angle / 180f * kotlin.math.PI)
-        val c = kotlin.math.cos(angle / 180f * kotlin.math.PI)
-        // TODO: fix onderstaande varname naar camelCase
+        //Calculate the rotation
+        val s = sin(angle / 180f * PI)
+        val c = cos(angle / 180f * PI)
+
+        //Calculate the zoom
         val xNew = (fX * c - fY * s) * zoom
         val yNew = (fX * s + fY * c) * zoom
 
@@ -80,7 +82,8 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
     }
 
     // TODO: voeg commentaar toe, beschrijf wat deze functie berekend
-    //It detects the first and the second length between the fingers and calculates by deviding it
+    // detects the first and the second length between the fingers and calculates the zoom factor
+    // and divides it
     private fun zoomBetweenLines(
         fX: Float,
         fY: Float,
@@ -101,8 +104,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
 
     }
 
-    // TODO: voeg commentaar toe, beschrijf wat deze functie berekend
-    //It calculates the angle between the first and second finger
+    // calculates the angle between the original and current fingers
     private fun angleBetweenLines(
         fX: Float,
         fY: Float,
@@ -113,15 +115,13 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
         nsX: Float,
         nsY: Float
     ): Float {
-        // TODO: android studio heeft wat suggesties over de atan2 functie hieronder... volg op.
         val angle1 =
             atan2((fY - sY).toDouble(), (fX - sX).toDouble()).toFloat()
         val angle2 =
             atan2((nfY - nsY).toDouble(), (nfX - nsX).toDouble()).toFloat()
         var angle = Math.toDegrees((angle2 - angle1).toDouble()).toFloat() % 360
-        // TODO: voeg commentaar toe, beschrijf wat onderstaande regels doen.
-        // If the angle is below -180 it will add up by 360
-        // If the angle is above 180 it will minus by 360
+
+        // Make the calculated angle between -180 and 180 degrees
         if (angle < -180f) angle += 360.0f
         if (angle > 180f) angle -= 360.0f
         return angle

@@ -35,15 +35,12 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
     override fun OnRotationZoom(rotationZoomDetector: RotationZoomTranslate?) {
         val angle = rotationZoomDetector!!.angle
-        // TODO: hieronder is de !! operator niet meer nodig zegt andriod studio... bedenk why?
-        //Het is een non null receiver, dus is het overbodig om !! te plaatsen
-        val zoom = rotationZoomDetector!!.zoom
-        val (tx, ty) = rotationZoomDetector!!.translation
+        val zoom = rotationZoomDetector.zoom
+        val (tx, ty) = rotationZoomDetector.translation
 
 //        Log.d("RotationGestureDetector", "Rotation: " + java.lang.Float.toString(angle))
         Log.d("RotationGestureDetector", "Zoom: " + java.lang.Float.toString(zoom))
 
-// TODO: remove comment below, voeg evt comment to achter set (waarom geen assignment)
 
 
         val newMatrix = Matrix()
@@ -55,7 +52,6 @@ class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
 
         mazeImage?.imageMatrix = newMatrix
 
-// TODO: remove comments below, behalve als er heel goede reden is om ze te houden.
 
     }
 }
