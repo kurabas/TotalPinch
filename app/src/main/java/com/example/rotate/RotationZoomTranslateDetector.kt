@@ -7,10 +7,9 @@ import kotlin.math.sin
 import kotlin.math.cos
 import kotlin.math.PI
 
-// TODO: voeg commentaar toe,beschrijf wat de class doet
-//RotationZoomTranslate, it detects the rotation, zoom and translation for an image
+// detects the rotation, zoom and translation from motion events and calls
+// onRotationZoomTranslate when motion has been detected
 class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTranslateListener?) {
-
 
     private var fX = 0f
     private var fY = 0f
@@ -98,7 +97,6 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
         //zoom wordt berekend door de 2e en 1e lijn te delen
         val zoom = secondLength/firstLength
         return zoom
-
     }
 
     // calculates the angle between the original and current fingers
