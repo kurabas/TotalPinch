@@ -22,7 +22,6 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
     private var zoom = 1f
     private var translation = Pair(0f, 0f)
 
-    // TODO: voeg commentaar toe, beschrijf wat deze functie doet
     //It detects the first 2 and second 2 fingers on the display and calls OnRotationZoom when a movement is detected
     fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
@@ -80,7 +79,6 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
         return Pair(tx.toFloat(), ty.toFloat())
     }
 
-    // TODO: voeg commentaar toe, beschrijf wat deze functie berekend
     // detects the first and the second length between the fingers and calculates the zoom factor
     // and divides it
     private fun zoomBetweenLines(
@@ -126,7 +124,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
         return angle
     }
 
-    // TODO: voeg commentaar toe, beschrijf wat deze interface doet
+    // will be called when a motion (rotation, zoom, translation) is detected
     interface OnRotationZoomGestureListener {
         fun OnRotationZoom(angle: Float, zoom: Float, translation: Pair<Float, Float>)
     }

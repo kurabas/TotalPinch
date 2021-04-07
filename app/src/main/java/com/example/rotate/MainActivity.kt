@@ -10,7 +10,6 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 
-//TODO: verwijder onderstaand comments (tenzij er heel goede reden is het te bewaren)
 // TODO: na verplaatsing wordt image niet gereset, maar begint rotatiematrix wel weer op 0, reset de image OF zorg dat de rotatiematrix blijft (en voeg dan evt reset knop toe)
 
 class MainActivity : AppCompatActivity(), OnRotationZoomGestureListener {
