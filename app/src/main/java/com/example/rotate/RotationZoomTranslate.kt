@@ -8,7 +8,6 @@ import kotlin.math.cos
 import kotlin.math.PI
 
 // TODO: voeg commentaar toe,beschrijf wat de class doet
-// TODO: evt rename class, hij detecteert nu ook translations (maar RotationZoomTranslationGestureDetector is wat lang en ook niet heel helder...)
 //RotationZoomTranslate, it detects the rotation, zoom and translation for an image
 class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener?) {
 
