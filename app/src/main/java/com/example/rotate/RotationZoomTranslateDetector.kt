@@ -9,7 +9,7 @@ import kotlin.math.PI
 
 // TODO: voeg commentaar toe,beschrijf wat de class doet
 //RotationZoomTranslate, it detects the rotation, zoom and translation for an image
-class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener?) {
+class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTranslateListener?) {
 
 
     private var fX = 0f
@@ -43,7 +43,7 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
                 zoom = zoomBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY)
                 translation = translationAfterRotateAndZoom(angle, zoom, fX, fY, nfX, nfY)
 
-                mListener?.OnRotationZoom(angle, zoom, translation)
+                mListener?.onRotationZoomTranslate(angle, zoom, translation)
             }
             MotionEvent.ACTION_UP -> ptrID1 = INVALID_POINTER_ID
             MotionEvent.ACTION_POINTER_UP -> ptrID2 = INVALID_POINTER_ID
@@ -125,8 +125,8 @@ class RotationZoomTranslate(private val mListener: OnRotationZoomGestureListener
     }
 
     // will be called when a motion (rotation, zoom, translation) is detected
-    interface OnRotationZoomGestureListener {
-        fun OnRotationZoom(angle: Float, zoom: Float, translation: Pair<Float, Float>)
+    interface OnRotationZoomTranslateListener {
+        fun onRotationZoomTranslate(angle: Float, zoom: Float, translation: Pair<Float, Float>)
     }
 
     companion object {
