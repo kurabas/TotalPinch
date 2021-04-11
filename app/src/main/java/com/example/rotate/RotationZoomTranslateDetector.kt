@@ -55,46 +55,44 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
     }
 
     // Calculates the translation after rotate and zoom
-    // TODO: rename vars below (org/cur) LET OP: alleen 1, geen 2.
     private fun translationAfterRotateAndZoom(
             angle: Float,
             zoom: Float,
-            fX: Float,
-            fY: Float,
-            nfX: Float,
-            nfY: Float): Pair<Float, Float> {
+            orgX1: Float,
+            orgY1: Float,
+            curX1: Float,
+            curY1: Float): Pair<Float, Float> {
 
         //Calculate the rotation
         val s = sin(angle / 180f * PI)
         val c = cos(angle / 180f * PI)
 
         //Calculate the zoom
-        val xNew = (fX * c - fY * s) * zoom
-        val yNew = (fX * s + fY * c) * zoom
+        val xNew = (orgX1 * c - orgY1 * s) * zoom
+        val yNew = (orgX1 * s + orgY1 * c) * zoom
 
         // calculate translation needed to get to new point
-        val tx = nfX - xNew
-        val ty = nfY - yNew
+        val tx = curX1 - xNew
+        val ty = curY1 - yNew
 
         return Pair(tx.toFloat(), ty.toFloat())
     }
 
     // detects the first and the second length between the fingers and calculates the zoom factor
     // and divides it
-    // TODO: rename vars below (org/cur)
     private fun zoomBetweenLines(
-        sX: Float,
-        sY: Float,
-        fX: Float,
-        fY: Float,
-        nsX: Float,
-        nsY: Float,
-        nfX: Float,
-        nfY: Float
+            orgX2: Float,
+            orgY2: Float,
+            orgX1: Float,
+            orgY1: Float,
+            curX2: Float,
+            curY2: Float,
+            curX1: Float,
+            curY1: Float
     ): Float {
         //stelling van pythagoras voor de 1e en 2e lijn
-        val firstLength = sqrt((fX - sX).pow(2) + (fY - sY).pow(2))
-        val secondLength = sqrt((nfX - nsX).pow(2) + (nfY - nsY).pow(2))
+        val firstLength = sqrt((orgX1 - orgX2).pow(2) + (orgY1 - orgY2).pow(2))
+        val secondLength = sqrt((curX1 - curX2).pow(2) + (curY1 - curY2).pow(2))
 
         //zoom wordt berekend door de 2e en 1e lijn te delen
         val zoom = secondLength/firstLength
@@ -102,7 +100,6 @@ class RotationZoomTranslateDetector(private val mListener: OnRotationZoomTransla
     }
 
     // calculates the angle between the original and current fingers
-    // TODO: rename vars below (org/cur)
     private fun angleBetweenLines(
         sX: Float,
         sY: Float,
